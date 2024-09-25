@@ -1,19 +1,17 @@
-from sklearn.preprocessing import StandardScaler
-import numpy as np 
-import pandas as pd
-import pickle
-import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-
-from sklearn.decomposition import PCA
-from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
-
-def dga_multi_layer_perceptron(gas_content):
+def dga_multi_layer_perceptron(gas_content):    
+    import numpy as np 
+    import pandas as pd
+    import pickle
+    import matplotlib.pyplot as plt
+    from sklearn import datasets
+    from sklearn.model_selection import train_test_split    
+    from sklearn.decomposition import PCA
+    from sklearn.svm import SVC
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.metrics import accuracy_score
+    from sklearn.preprocessing import StandardScaler
     # Get the input
     H2 = gas_content["H2"]
     CH4 = gas_content["CH4"]
