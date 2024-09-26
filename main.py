@@ -19,7 +19,6 @@ content_CO = st.sidebar.text_input('CO (ppm):')
 content_CO2 = st.sidebar.text_input('CO2 (ppm):')
 content_submit = st.sidebar.button("Analyze")
 
-
 # Dataframe initialize
 if 'full_data' not in st.session_state:
     st.session_state.full_data = pd.DataFrame(columns = ['Sample', 'H2', 'CH4', 'C2H4', 'C2H6', 'C2H2','CO', 'CO2', 'IEC', 'ROGERS','DUVAL TRI', 'DUVAL PENT', 'NEURAL NETWORK'])

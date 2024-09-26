@@ -1,17 +1,36 @@
-def dga_multi_layer_perceptron(gas_content):    
-    import numpy as np 
-    import pandas as pd
+import numpy as np 
+import pandas as pd
+
+def load_data():
+    data = pd.read_csv("X_ann.csv")
+    return data
+def get_scaled_values_dict(values_dict):
+    # Define a Function to Scale the Values based on the Min and Max of the Predictor in the Training Data
+    # data = load_data()
+    X = pd.read_csv("X_ann.csv")
+    #X = data.drop(['diagnosis'], axis=1)
+    scaled_dict = {}
+
+    for key, value in values_dict.items():
+        max_val = X[key].max()
+        min_val = X[key].min()
+        scaled_value = (value - min_val) / (max_val - min_val)
+        scaled_dict[key] = scaled_value
+    return scaled_dict
+
+def dga_multi_layer_perceptron(gas_content):
+    from sklearn.preprocessing import StandardScaler
     import pickle
     import matplotlib.pyplot as plt
     from sklearn import datasets
-    from sklearn.model_selection import train_test_split    
+    from sklearn.model_selection import train_test_split
+
     from sklearn.decomposition import PCA
     from sklearn.svm import SVC
     from sklearn.neighbors import KNeighborsClassifier
     from sklearn.ensemble import RandomForestClassifier
     from sklearn.neural_network import MLPClassifier
     from sklearn.metrics import accuracy_score
-    from sklearn.preprocessing import StandardScaler
     # Get the input
     H2 = gas_content["H2"]
     CH4 = gas_content["CH4"]
@@ -20,9 +39,12 @@ def dga_multi_layer_perceptron(gas_content):
     C2H2 = gas_content["C2H2"]
 
     # Define the input vector (X_input)
-    X_input = [[H2,CH4,C2H6,C2H4,C2H2]] #np.array([[H2,CH4,C2H6,C2H4,C2H2]])
-    scaler = StandardScaler()
-    df = pd.read_csv("X_ann.csv")
+    X_input = [[H2,CH4,C2H6,C2H4,C2H2]] # np.array([[H2,CH4,C2H6,C2H4,C2H2]])
+    
+    #scaler = StandardScaler()
+    # Import the scaler
+    scaler = pickle.load(open("scaler.pkl", "rb"))
+    df = load_data()
     #   X = df[:1]
     scaled_X = scaler.fit_transform(df)
     # Load the pre-trained model
