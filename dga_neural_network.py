@@ -1,5 +1,6 @@
 import numpy as np 
 import pandas as pd
+import pickle
 
 def load_data():
     data = pd.read_csv("X_ann.csv")
@@ -20,17 +21,10 @@ def get_scaled_values_dict(values_dict):
 
 def dga_multi_layer_perceptron(gas_content):
     from sklearn.preprocessing import StandardScaler
-    import pickle
-    import matplotlib.pyplot as plt
-    from sklearn import datasets
-    from sklearn.model_selection import train_test_split
+    import matplotlib.pyplot as plt # type: ignore
+    from sklearn.metrics import __all__
+    import joblib
 
-    from sklearn.decomposition import PCA
-    from sklearn.svm import SVC
-    from sklearn.neighbors import KNeighborsClassifier
-    from sklearn.ensemble import RandomForestClassifier
-    from sklearn.neural_network import MLPClassifier
-    from sklearn.metrics import accuracy_score
     # Get the input
     H2 = gas_content["H2"]
     CH4 = gas_content["CH4"]
@@ -43,13 +37,12 @@ def dga_multi_layer_perceptron(gas_content):
     
     #scaler = StandardScaler()
     # Import the scaler
-    scaler = pickle.load(open("scaler.pkl", "rb"))
-    df = load_data()
-    #   X = df[:1]
-    scaled_X = scaler.fit_transform(df)
+    scaler = joblib.load("scaler.pkl")
+    #df = pd.read_csv("X_ann.csv")
+    #scaled_X = scaler.fit_transform(df)
     # Load the pre-trained model
     filename = 'dga_neuralnet_model.sav'
-    loaded_model = pickle.load(open(filename, 'rb'))
+    loaded_model = joblib.load("dga_model.sav") # pickle
     class_names = ["PD","D1", "D2", "T1", "T2", "T3","N"]
     x_test1 = scaler.transform(X_input)
     # Make prediction
@@ -69,9 +62,10 @@ def dga_multi_layer_perceptron(gas_content):
     # else:
     #     Fault_code = "N/A"            
     Fault_code = class_names[y_output[0]-1]
+    print(Fault_code)
     # For plotting
-    Fault_vector = loaded_model.predict_proba(x_test1)
-    Fault_vector = np.ravel(Fault_vector)
+    y_prob = loaded_model.predict_proba(x_test1)
+    Fault_vector = np.ravel(y_prob)
     labels = ['PD','D1','D2','T1','T2','T3','N']
     Fault_label = np.arange(len(labels))  # the label locations
     width = 0.7  # the width of the bars
@@ -82,7 +76,7 @@ def dga_multi_layer_perceptron(gas_content):
     ax.set_xlabel('Fault percentage')
     ax.bar_label(rects1, padding=3)
     mlp_figure.tight_layout()
-    mlp_percentage = np.floor((loaded_model.predict_proba(X_input))*100)
+    mlp_percentage = np.floor(y_prob*100)
     mlp_percentage = pd.DataFrame(mlp_percentage,columns=labels)
-
+   
     return [Fault_code, mlp_figure, mlp_percentage]
