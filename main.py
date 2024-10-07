@@ -5,7 +5,7 @@ from dga_diag import *
 from dga_neural_network import *
 import logging 
 # Title
-st.title("The advance Python-based DGA interpretation tool")
+st.title("Transformer Diagnostic based on ANN-DGA")
 
 # Input section
 st.sidebar.subheader('Input section')
